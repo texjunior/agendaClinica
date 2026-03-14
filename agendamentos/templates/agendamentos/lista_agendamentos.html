@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendamentos</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .topo h1 {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+        .topo p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-primario {
+            background: #2563eb;
+            color: white;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            align-items: end;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #e5e7eb;
+        }
+
+        .sem-registros {
+            text-align: center;
+            padding: 30px 10px;
+            color: #6b7280;
+        }
+
+        .acoes a {
+            margin-right: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-editar { color: #2563eb; }
+        .link-cancelar { color: #dc2626; }
+        .mensagem {
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        @media (max-width: 900px) {
+            .filtros {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .filtros {
+                grid-template-columns: 1fr;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 12px;
+                background: #fff;
+            }
+
+            td {
+                border: none;
+                padding: 6px 0;
+            }
+
+            td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                display: block;
+                margin-bottom: 2px;
+                color: #374151;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mensagem {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="topo">
+            <div>
+                <h1>Agendamentos</h1>
+                <p>Consulte, filtre e acompanhe os agendamentos cadastrados.</p>
+            </div>
+
+            <a href="{% url 'novo_agendamento' %}" class="btn btn-primario">Novo agendamento</a>
+        </div>
+
+        <div class="card">
+            <form method="get" class="filtros">
+                <div class="campo">
+                    <label for="id_data">Data</label>
+                    <input type="date" name="data" id="id_data" value="{{ request.GET.data }}">
+                </div>
+
+                <div class="campo">
+                    <label for="id_medico">Médico</label>
+                    <select name="medico" id="id_medico">
+                        <option value="">Todos</option>
+                        {% for medico in medicos %}
+                            <option value="{{ medico.id }}" {% if request.GET.medico == medico.id|stringformat:"s" %}selected{% endif %}>
+                                {{ medico.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="id_status">Status</label>
+                    <select name="status" id="id_status">
+                        <option value="">Todos</option>
+                        {% for valor, nome in status_choices %}
+                            <option value="{{ valor }}" {% if request.GET.status == valor %}selected{% endif %}>
+                                {{ nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="id_busca">Buscar</label>
+                    <input type="text" name="busca" id="id_busca" value="{{ request.GET.busca }}" placeholder="Paciente, CPF ou médico">
+                </div>
+
+                <div class="campo">
+                    <button type="submit" class="btn btn-primario">Filtrar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Médico</th>
+                        <th>Tipo</th>
+                        <th>Convênio</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agendamento in agendamentos %}
+                        <tr>
+                            <td data-label="Data">{{ agendamento.data_consulta|date:"d/m/Y" }}</td>
+                            <td data-label="Hora">{{ agendamento.hora_consulta|time:"H:i" }}</td>
+                            <td data-label="Paciente">
+                                <strong>{{ agendamento.paciente.nome }}</strong><br>
+                                <small>CPF: {{ agendamento.paciente.cpf }}</small>
+                            </td>
+                            <td data-label="Médico">{{ agendamento.medico.nome }}</td>
+                            <td data-label="Tipo">{{ agendamento.get_tipo_atendimento_display }}</td>
+                            <td data-label="Convênio">
+                                {% if agendamento.convenio %}
+                                    {{ agendamento.convenio.nome }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td data-label="Status">
+                                <span class="badge">{{ agendamento.get_status_display }}</span>
+                            </td>
+                            <td data-label="Ações" class="acoes">
+                                <a href="{% url 'editar_agendamento' agendamento.id %}" class="link-editar">Editar</a>
+                                <a href="{% url 'cancelar_agendamento' agendamento.id %}" class="link-cancelar">
+                                    Cancelar
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="sem-registros">Nenhum agendamento encontrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+<a href="{% url 'dashboard' %}" class="btn btn-secundario">Voltar</a>
+</body>
+</html>

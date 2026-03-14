@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo_pagina }}</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .topo {
+            margin-bottom: 20px;
+        }
+
+        .topo h1 {
+            margin: 0 0 8px;
+        }
+
+        .topo p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.06);
+        }
+
+        .campo {
+            margin-bottom: 18px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .campo select,
+        .campo input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+        }
+
+        .erro-geral {
+            background: #fee2e2;
+            color: #991b1b;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+        .dia-conteudo {
+            margin-top: 14px;
+        }
+
+        .dia-conteudo.oculto {
+            display: none;
+        }
+        .dia-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #fafafa;
+        }
+        .dia-card.ativo {
+            border: 1px solid #93c5fd;
+            background: #f8fbff;
+        }
+        .dia-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .dia-topo label {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .faixas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .faixa {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .faixa h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .faixa-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .campo-dia-desabilitado {
+            opacity: 0.55;
+        }
+
+        input:disabled,
+        select:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+        .linha-botoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-primario {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-secundario {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .errorlist {
+            color: #b91c1c;
+            margin: 6px 0 0;
+            padding-left: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .faixas {
+                grid-template-columns: 1fr;
+            }
+
+            .faixa-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topo">
+        <h1>{{ titulo_pagina }}</h1>
+        <p>{{ subtitulo_pagina }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="card">
+            {% if form.non_field_errors %}
+                <div class="erro-geral">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="campo">
+                <label for="{{ form.medico.id_for_label }}">Médico</label>
+                {{ form.medico }}
+                {{ form.medico.errors }}
+                <small style="display:block; margin-top:6px; color:#6b7280;">
+                    Ao selecionar um médico, a agenda semanal já cadastrada será carregada automaticamente para edição.
+                </small>
+            </div>
+
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="segunda" titulo="Segunda-feira" ativo=form.segunda_ativa h1i=form.segunda_1_hora_inicio h1f=form.segunda_1_hora_fim d1=form.segunda_1_duracao vc1=form.segunda_1_vagas_convenio vp1=form.segunda_1_vagas_particular h2i=form.segunda_2_hora_inicio h2f=form.segunda_2_hora_fim d2=form.segunda_2_duracao vc2=form.segunda_2_vagas_convenio vp2=form.segunda_2_vagas_particular %}
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="terca" titulo="Terça-feira" ativo=form.terca_ativa h1i=form.terca_1_hora_inicio h1f=form.terca_1_hora_fim d1=form.terca_1_duracao vc1=form.terca_1_vagas_convenio vp1=form.terca_1_vagas_particular h2i=form.terca_2_hora_inicio h2f=form.terca_2_hora_fim d2=form.terca_2_duracao vc2=form.terca_2_vagas_convenio vp2=form.terca_2_vagas_particular %}
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="quarta" titulo="Quarta-feira" ativo=form.quarta_ativa h1i=form.quarta_1_hora_inicio h1f=form.quarta_1_hora_fim d1=form.quarta_1_duracao vc1=form.quarta_1_vagas_convenio vp1=form.quarta_1_vagas_particular h2i=form.quarta_2_hora_inicio h2f=form.quarta_2_hora_fim d2=form.quarta_2_duracao vc2=form.quarta_2_vagas_convenio vp2=form.quarta_2_vagas_particular %}
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="quinta" titulo="Quinta-feira" ativo=form.quinta_ativa h1i=form.quinta_1_hora_inicio h1f=form.quinta_1_hora_fim d1=form.quinta_1_duracao vc1=form.quinta_1_vagas_convenio vp1=form.quinta_1_vagas_particular h2i=form.quinta_2_hora_inicio h2f=form.quinta_2_hora_fim d2=form.quinta_2_duracao vc2=form.quinta_2_vagas_convenio vp2=form.quinta_2_vagas_particular %}
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="sexta" titulo="Sexta-feira" ativo=form.sexta_ativa h1i=form.sexta_1_hora_inicio h1f=form.sexta_1_hora_fim d1=form.sexta_1_duracao vc1=form.sexta_1_vagas_convenio vp1=form.sexta_1_vagas_particular h2i=form.sexta_2_hora_inicio h2f=form.sexta_2_hora_fim d2=form.sexta_2_duracao vc2=form.sexta_2_vagas_convenio vp2=form.sexta_2_vagas_particular %}
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="sabado" titulo="Sábado" ativo=form.sabado_ativa h1i=form.sabado_1_hora_inicio h1f=form.sabado_1_hora_fim d1=form.sabado_1_duracao vc1=form.sabado_1_vagas_convenio vp1=form.sabado_1_vagas_particular h2i=form.sabado_2_hora_inicio h2f=form.sabado_2_hora_fim d2=form.sabado_2_duracao vc2=form.sabado_2_vagas_convenio vp2=form.sabado_2_vagas_particular %}
+            {% include "medicos/parciais/_dia_agenda.html" with prefixo="domingo" titulo="Domingo" ativo=form.domingo_ativa h1i=form.domingo_1_hora_inicio h1f=form.domingo_1_hora_fim d1=form.domingo_1_duracao vc1=form.domingo_1_vagas_convenio vp1=form.domingo_1_vagas_particular h2i=form.domingo_2_hora_inicio h2f=form.domingo_2_hora_fim d2=form.domingo_2_duracao vc2=form.domingo_2_vagas_convenio vp2=form.domingo_2_vagas_particular %}
+
+            <div class="linha-botoes">
+                <button type="submit" class="btn btn-primario">Salvar agenda semanal</button>
+                <a href="{% url 'lista_agendas_medicas' %}" class="btn btn-secundario">Voltar para agendas</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secundario">Início</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    const diasSemana = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+
+    function configurarDia(prefixo) {
+        const checkbox = document.getElementById(`id_${prefixo}_ativa`);
+        const conteudo = document.getElementById(`conteudo-${prefixo}`);
+        const card = document.getElementById(`card-${prefixo}`);
+
+        if (!checkbox || !conteudo || !card) return;
+
+        const campos = conteudo.querySelectorAll("input[type='time'], input[type='number']");
+
+        function atualizar() {
+            if (checkbox.checked) {
+                conteudo.classList.remove("oculto");
+                card.classList.add("ativo");
+                campos.forEach(campo => {
+                    campo.disabled = false;
+                });
+            } else {
+                conteudo.classList.add("oculto");
+                card.classList.remove("ativo");
+                campos.forEach(campo => {
+                    campo.disabled = true;
+                    campo.value = "";
+                });
+            }
+        }
+
+        checkbox.addEventListener("change", atualizar);
+        atualizar();
+    }
+
+    function limparDia(prefixo) {
+        const checkbox = document.getElementById(`id_${prefixo}_ativa`);
+        if (checkbox) {
+            checkbox.checked = false;
+            checkbox.dispatchEvent(new Event("change"));
+        }
+    }
+
+    function preencherFaixa(prefixo, faixa, dados) {
+        const horaInicio = document.getElementById(`id_${prefixo}_${faixa}_hora_inicio`);
+        const horaFim = document.getElementById(`id_${prefixo}_${faixa}_hora_fim`);
+        const duracao = document.getElementById(`id_${prefixo}_${faixa}_duracao`);
+        const vagasConvenio = document.getElementById(`id_${prefixo}_${faixa}_vagas_convenio`);
+        const vagasParticular = document.getElementById(`id_${prefixo}_${faixa}_vagas_particular`);
+
+        if (horaInicio) horaInicio.value = dados.hora_inicio || "";
+        if (horaFim) horaFim.value = dados.hora_fim || "";
+        if (duracao) duracao.value = dados.duracao ?? "";
+        if (vagasConvenio) vagasConvenio.value = dados.vagas_convenio ?? "";
+        if (vagasParticular) vagasParticular.value = dados.vagas_particular ?? "";
+    }
+
+    function preencherDia(prefixo, faixas) {
+        const checkbox = document.getElementById(`id_${prefixo}_ativa`);
+        if (!checkbox) return;
+
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event("change"));
+
+        if (faixas[0]) {
+            preencherFaixa(prefixo, 1, faixas[0]);
+        }
+        if (faixas[1]) {
+            preencherFaixa(prefixo, 2, faixas[1]);
+        }
+    }
+
+    async function carregarAgendaDoMedico() {
+        const campoMedico = document.getElementById("id_medico");
+        const medicoId = campoMedico.value;
+
+        diasSemana.forEach(limparDia);
+
+        if (!medicoId) return;
+
+        try {
+            const resposta = await fetch(`/medicos/agendas/semanal/dados/?medico_id=${medicoId}`);
+            const dados = await resposta.json();
+
+            Object.entries(dados.dias || {}).forEach(([prefixo, faixas]) => {
+                preencherDia(prefixo, faixas);
+            });
+        } catch (erro) {
+            console.error("Erro ao carregar agenda semanal do médico:", erro);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        diasSemana.forEach(configurarDia);
+
+        const campoMedico = document.getElementById("id_medico");
+        if (campoMedico) {
+            campoMedico.addEventListener("change", carregarAgendaDoMedico);
+
+            if (campoMedico.value) {
+                carregarAgendaDoMedico();
+            }
+        }
+    });
+</script>
+</body>
+</html>

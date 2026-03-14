@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Convênios</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #1f2937; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
+        .topo { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+        .card { background:#fff; border-radius:14px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,.06); margin-bottom:20px; }
+        .btn { display:inline-block; text-decoration:none; border:none; border-radius:10px; padding:12px 18px; font-weight:bold; cursor:pointer; }
+        .btn-primario { background:#2563eb; color:#fff; }
+        .filtros { display:grid; grid-template-columns: 1fr 180px 150px; gap:12px; align-items:end; }
+        .campo label { display:block; font-weight:bold; margin-bottom:6px; }
+        .campo input, .campo select { width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:10px; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { text-align:left; padding:12px 10px; border-bottom:1px solid #e5e7eb; }
+        th { background:#f9fafb; }
+        .acoes a { margin-right:10px; text-decoration:none; font-weight:bold; }
+        .editar { color:#2563eb; }
+        .excluir { color:#dc2626; }
+        .mensagem { padding:12px 14px; margin-bottom:16px; border-radius:10px; font-weight:500; }
+        .success { background:#dcfce7; color:#166534; }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mensagem {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="topo">
+        <div>
+            <h1>Convênios</h1>
+            <p>Cadastre e gerencie os convênios atendidos.</p>
+        </div>
+        <a href="{% url 'novo_convenio' %}" class="btn btn-primario">Novo convênio</a>
+    </div>
+
+    <div class="card">
+        <form method="get" class="filtros">
+            <div class="campo">
+                <label for="id_busca">Buscar</label>
+                <input type="text" id="id_busca" name="busca" value="{{ request.GET.busca }}" placeholder="Nome do convênio">
+            </div>
+            <div class="campo">
+                <label for="id_ativo">Situação</label>
+                <select name="ativo" id="id_ativo">
+                    <option value="">Todos</option>
+                    <option value="1" {% if request.GET.ativo == "1" %}selected{% endif %}>Ativos</option>
+                    <option value="0" {% if request.GET.ativo == "0" %}selected{% endif %}>Inativos</option>
+                </select>
+            </div>
+            <div class="campo">
+                <button type="submit" class="btn btn-primario">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for convenio in convenios %}
+                <tr>
+                    <td>{{ convenio.nome }}</td>
+                    <td>{% if convenio.ativo %}Sim{% else %}Não{% endif %}</td>
+                    <td class="acoes">
+                        <a href="{% url 'editar_convenio' convenio.id %}" class="editar">Editar</a>
+                        <a href="{% url 'excluir_convenio' convenio.id %}" class="excluir">Excluir</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Nenhum convênio encontrado.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn btn-secundario">Voltar</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo_pagina }}</title>
+    <style>
+        body { margin:0; font-family:Arial,sans-serif; background:#f4f6f9; color:#1f2937; }
+        .container { max-width:900px; margin:30px auto; padding:0 16px; }
+        .card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 8px 24px rgba(0,0,0,.06); }
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .campo label { display:block; font-weight:bold; margin-bottom:6px; }
+        .campo input, .campo select { width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:10px; }
+        .btn { display:inline-block; text-decoration:none; border:none; border-radius:10px; padding:12px 18px; font-weight:bold; cursor:pointer; }
+        .btn-primario { background:#2563eb; color:#fff; }
+        .btn-secundario { background:#e5e7eb; color:#111827; }
+        .linha-botoes { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
+        .errorlist { color:#b91c1c; margin:6px 0 0; padding-left:18px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div style="margin-bottom:20px;">
+        <h1>{{ titulo_pagina }}</h1>
+        <p style="color:#6b7280;">{{ subtitulo_pagina }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="card">
+            <div class="grid">
+                <div class="campo">
+                    <label for="{{ form.medico.id_for_label }}">Médico</label>
+                    {{ form.medico }}
+                    {{ form.medico.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.dia_semana.id_for_label }}">Dia da semana</label>
+                    {{ form.dia_semana }}
+                    {{ form.dia_semana.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.hora_inicio.id_for_label }}">Hora inicial</label>
+                    {{ form.hora_inicio }}
+                    {{ form.hora_inicio.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.hora_fim.id_for_label }}">Hora final</label>
+                    {{ form.hora_fim }}
+                    {{ form.hora_fim.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.duracao_consulta.id_for_label }}">Duração da consulta (minutos)</label>
+                    {{ form.duracao_consulta }}
+                    {{ form.duracao_consulta.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.vagas_particular.id_for_label }}">Vagas particular</label>
+                    {{ form.vagas_particular }}
+                    {{ form.vagas_particular.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.vagas_convenio.id_for_label }}">Vagas convênio</label>
+                    {{ form.vagas_convenio }}
+                    {{ form.vagas_convenio.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.ativo.id_for_label }}">Ativo</label>
+                    {{ form.ativo }}
+                    {{ form.ativo.errors }}
+                </div>
+            </div>
+
+            <div class="linha-botoes">
+                <button type="submit" class="btn btn-primario">
+                    {% if modo_edicao %}Atualizar agenda{% else %}Salvar agenda{% endif %}
+                </button>
+                <a href="{% url 'lista_agendas_medicas' %}" class="btn btn-secundario">Voltar para agendas</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secundario">Início</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

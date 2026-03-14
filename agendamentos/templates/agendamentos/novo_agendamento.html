@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo_pagina }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .topo {
+            margin-bottom: 20px;
+        }
+
+        .topo h1 {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+        .topo p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .grid-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .campo input,
+        .campo select,
+        .campo textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #fff;
+            font-size: 14px;
+        }
+
+        .campo textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .linha-botoes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-primario {
+            background: #2563eb;
+            color: white;
+        }
+
+        .mensagem {
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .errorlist {
+            color: #b91c1c;
+            margin: 6px 0 0;
+            padding-left: 18px;
+        }
+
+        .separador {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 22px 0;
+        }
+
+        .ajuda {
+            display: block;
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .carregando {
+            color: #2563eb;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+        .campo-desabilitado {
+            opacity: 0.6;
+        }
+
+        select:disabled,
+        input:disabled,
+        textarea:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topo h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topo">
+            <h1>{{ titulo_pagina }}</h1>
+            <p>{{ subtitulo_pagina }}</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mensagem {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="card">
+                <h2>Dados do paciente</h2>
+
+                <div class="grid">
+                    <div class="campo">
+                        <label for="{{ form.nome_paciente.id_for_label }}">Nome do paciente</label>
+                        {{ form.nome_paciente }}
+                        {{ form.nome_paciente.errors }}
+                    </div>
+
+                    <div class="campo">
+                        <label for="{{ form.cpf_paciente.id_for_label }}">CPF</label>
+                        {{ form.cpf_paciente }}
+                        {{ form.cpf_paciente.errors }}
+                    </div>
+
+                    <div class="campo">
+                        <label for="{{ form.telefone_paciente.id_for_label }}">Telefone</label>
+                        {{ form.telefone_paciente }}
+                        {{ form.telefone_paciente.errors }}
+                    </div>
+
+                    <div class="campo">
+                        <label for="{{ form.data_nascimento_paciente.id_for_label }}">Data de nascimento</label>
+                        {{ form.data_nascimento_paciente }}
+                        {{ form.data_nascimento_paciente.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Dados do agendamento</h2>
+
+                <div class="grid">
+                    <div class="campo">
+                        <label for="{{ form.medico.id_for_label }}">Médico</label>
+                        {{ form.medico }}
+                        {{ form.medico.errors }}
+                    </div>
+
+                    <div class="campo">
+                        <label for="{{ form.tipo_atendimento.id_for_label }}">Tipo de atendimento</label>
+                        {{ form.tipo_atendimento }}
+                        <small class="ajuda">Se for particular, o convênio pode ficar em branco.</small>
+                        {{ form.tipo_atendimento.errors }}
+                    </div>
+
+                    <div class="campo" id="bloco-convenio">
+                        <label for="{{ form.convenio.id_for_label }}">Convênio</label>
+                        {{ form.convenio }}
+                        <small class="ajuda" id="ajuda-convenio">
+                            A lista será carregada conforme o médico escolhido.
+                        </small>
+                        <div id="carregando-convenios" class="carregando">Carregando convênios...</div>
+                        {{ form.convenio.errors }}
+                    </div>
+
+                    <div class="campo">
+                        <label for="{{ form.data_consulta.id_for_label }}">Data da consulta</label>
+                        {{ form.data_consulta }}
+                        {{ form.data_consulta.errors }}
+                    </div>
+
+                    <div class="campo">
+                        <label for="{{ form.hora_consulta.id_for_label }}">Horário</label>
+                        {{ form.hora_consulta }}
+                        <small class="ajuda">Os horários serão carregados conforme médico e data.</small>
+                        <div id="carregando-horarios" class="carregando">Carregando horários...</div>
+                        {{ form.hora_consulta.errors }}
+                    </div>
+                </div>
+
+                <div class="separador"></div>
+
+                <div class="grid-1">
+                    <div class="campo">
+                        <label for="{{ form.observacao.id_for_label }}">Observação</label>
+                        {{ form.observacao }}
+                        {{ form.observacao.errors }}
+                    </div>
+                </div>
+
+                <div class="linha-botoes">
+                    <button type="submit" class="btn btn-primario">
+                        {% if modo_edicao %}
+                            Atualizar agendamento
+                        {% else %}
+                            Salvar agendamento
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+<a href="{% url 'dashboard' %}" class="btn btn-secundario">Voltar</a>
+    <script>
+        const campoMedico = document.getElementById("id_medico");
+        const campoConvenio = document.getElementById("id_convenio");
+        const campoData = document.getElementById("id_data_consulta");
+        const campoHorario = document.getElementById("id_hora_consulta");
+        const carregandoConvenios = document.getElementById("carregando-convenios");
+        const carregandoHorarios = document.getElementById("carregando-horarios");
+        const campoTipoAtendimento = document.getElementById("id_tipo_atendimento");
+        const blocoConvenio = document.getElementById("bloco-convenio");
+        const ajudaConvenio = document.getElementById("ajuda-convenio");
+
+        function limparConvenios() {
+            campoConvenio.innerHTML = '<option value="">Selecione um convênio</option>';
+        }
+
+        function limparHorarios() {
+            campoHorario.innerHTML = '<option value="">Selecione um horário</option>';
+        }
+
+        async function carregarConvenios() {
+            const medicoId = campoMedico.value;
+
+            limparConvenios();
+
+            if (!medicoId) {
+                return;
+            }
+
+            carregandoConvenios.style.display = "block";
+
+            try {
+                const resposta = await fetch(`/agendamentos/convenios-do-medico/?medico_id=${medicoId}`);
+                const dados = await resposta.json();
+
+                dados.convenios.forEach(convenio => {
+                    const option = document.createElement("option");
+                    option.value = convenio.id;
+                    option.textContent = convenio.nome;
+                    campoConvenio.appendChild(option);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar convênios:", erro);
+            } finally {
+                carregandoConvenios.style.display = "none";
+            }
+        }
+
+        async function carregarHorarios() {
+            const medicoId = campoMedico.value;
+            const data = campoData.value;
+            const tipo = campoTipoAtendimento.value;
+
+            limparHorarios();
+
+            if (!medicoId || !data || !tipo) {
+                return;
+            }
+
+            carregandoHorarios.style.display = "block";
+
+            try {
+                const resposta = await fetch(`/agendamentos/horarios-disponiveis/?medico=${medicoId}&data=${data}&tipo_atendimento=${tipo}`);
+                const dados = await resposta.json();
+
+                dados.horarios.forEach(horario => {
+                    const option = document.createElement("option");
+                    option.value = horario;
+                    option.textContent = horario;
+                    campoHorario.appendChild(option);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar horários:", erro);
+            } finally {
+                carregandoHorarios.style.display = "none";
+            }
+        }
+
+        campoMedico.addEventListener("change", async function () {
+            await carregarConvenios();
+            await carregarHorarios();
+        });
+
+        campoData.addEventListener("change", carregarHorarios);
+        campoTipoAtendimento.addEventListener("change", atualizarEstadoConvenio);
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (campoMedico.value) {
+                await carregarConvenios();
+            } else {
+                atualizarEstadoConvenio();
+            }
+
+            if (campoMedico.value && campoData.value) {
+                await carregarHorarios();
+            }
+
+            atualizarEstadoConvenio();
+        });
+
+        function atualizarEstadoConvenio() {
+            const tipo = campoTipoAtendimento.value;
+
+            if (tipo === "particular") {
+                campoConvenio.value = "";
+                campoConvenio.disabled = true;
+                blocoConvenio.classList.add("campo-desabilitado");
+                ajudaConvenio.textContent = "Para atendimento particular, o convênio não precisa ser informado.";
+            } else {
+                campoConvenio.disabled = false;
+                blocoConvenio.classList.remove("campo-desabilitado");
+                ajudaConvenio.textContent = "A lista será carregada conforme o médico escolhido.";
+            }
+        }
+        async function carregarConvenios() {
+            const medicoId = campoMedico.value;
+
+            limparConvenios();
+
+            if (!medicoId) {
+                return;
+            }
+
+            carregandoConvenios.style.display = "block";
+
+            try {
+                const resposta = await fetch(`/agendamentos/convenios-do-medico/?medico_id=${medicoId}`);
+                const dados = await resposta.json();
+
+                dados.convenios.forEach(convenio => {
+                    const option = document.createElement("option");
+                    option.value = convenio.id;
+                    option.textContent = convenio.nome;
+                    campoConvenio.appendChild(option);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar convênios:", erro);
+            } finally {
+                carregandoConvenios.style.display = "none";
+            }
+        }
+        
+    </script>
+</body>
+</html>

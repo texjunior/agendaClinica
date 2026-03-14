@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cancelar Agendamento</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .resumo {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 18px 0;
+        }
+
+        .linha-botoes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-perigo {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-secundario {
+            background: #e5e7eb;
+            color: #111827;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Cancelar Agendamento</h1>
+            <p>Confirme se deseja realmente cancelar este agendamento.</p>
+
+            <div class="resumo">
+                <p><strong>Paciente:</strong> {{ agendamento.paciente.nome }}</p>
+                <p><strong>Médico:</strong> {{ agendamento.medico.nome }}</p>
+                <p><strong>Data:</strong> {{ agendamento.data_consulta|date:"d/m/Y" }}</p>
+                <p><strong>Hora:</strong> {{ agendamento.hora_consulta|time:"H:i" }}</p>
+                <p><strong>Status atual:</strong> {{ agendamento.get_status_display }}</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="linha-botoes">
+                    <button type="submit" class="btn btn-perigo">Confirmar cancelamento</button>
+                    <a href="{% url 'lista_agendamentos' %}" class="btn btn-secundario">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

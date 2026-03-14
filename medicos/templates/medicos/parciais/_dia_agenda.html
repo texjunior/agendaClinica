@@ -1,0 +1,72 @@
+<div class="dia-card" id="card-{{ prefixo }}">
+    <div class="dia-topo">
+        {{ ativo }}
+        <label for="{{ ativo.id_for_label }}">{{ titulo }}</label>
+    </div>
+
+    <div class="dia-conteudo" id="conteudo-{{ prefixo }}">
+        <div class="faixas">
+            <div class="faixa">
+                <h3>Faixa 1</h3>
+                <div class="faixa-grid">
+                    <div class="campo">
+                        <label for="{{ h1i.id_for_label }}">Hora início</label>
+                        {{ h1i }}
+                        {{ h1i.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ h1f.id_for_label }}">Hora fim</label>
+                        {{ h1f }}
+                        {{ h1f.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ d1.id_for_label }}">Duração (min)</label>
+                        {{ d1 }}
+                        {{ d1.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ vc1.id_for_label }}">Vagas convênio</label>
+                        {{ vc1 }}
+                        {{ vc1.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ vp1.id_for_label }}">Vagas particular</label>
+                        {{ vp1 }}
+                        {{ vp1.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="faixa">
+                <h3>Faixa 2</h3>
+                <div class="faixa-grid">
+                    <div class="campo">
+                        <label for="{{ h2i.id_for_label }}">Hora início</label>
+                        {{ h2i }}
+                        {{ h2i.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ h2f.id_for_label }}">Hora fim</label>
+                        {{ h2f }}
+                        {{ h2f.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ d2.id_for_label }}">Duração (min)</label>
+                        {{ d2 }}
+                        {{ d2.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ vc2.id_for_label }}">Vagas convênio</label>
+                        {{ vc2 }}
+                        {{ vc2.errors }}
+                    </div>
+                    <div class="campo">
+                        <label for="{{ vp2.id_for_label }}">Vagas particular</label>
+                        {{ vp2 }}
+                        {{ vp2.errors }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

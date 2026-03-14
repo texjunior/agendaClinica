@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard da Clínica</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .topo {
+            margin-bottom: 24px;
+        }
+
+        .topo h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        .topo p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            display: block;
+            text-decoration: none;
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            color: #1f2937;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.10);
+        }
+
+        .icone {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
+
+        .card h2 {
+            margin: 0 0 8px;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 0;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .secao {
+            margin-top: 30px;
+        }
+
+        .secao h3 {
+            margin-bottom: 14px;
+            font-size: 20px;
+        }
+
+        @media (max-width: 950px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topo h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topo">
+            <h1>Clínica • Painel Inicial</h1>
+            <p>Escolha uma área para começar a trabalhar no sistema.</p>
+        </div>
+
+        <div class="secao">
+            <h3>Atendimento</h3>
+            <div class="grid">
+                <a href="{% url 'lista_agendamentos' %}" class="card">
+                    <div class="icone">A</div>
+                    <h2>Agendamentos</h2>
+                    <p>Consulte, filtre, edite e cadastre os agendamentos da clínica.</p>
+                </a>
+
+                <a href="{% url 'novo_agendamento' %}" class="card">
+                    <div class="icone">+</div>
+                    <h2>Novo Agendamento</h2>
+                    <p>Cadastre um novo paciente e agende a consulta em uma única tela.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="secao">
+            <h3>Cadastros</h3>
+            <div class="grid">
+                <a href="{% url 'lista_medicos' %}" class="card">
+                    <div class="icone">M</div>
+                    <h2>Médicos</h2>
+                    <p>Cadastre, edite e mantenha os médicos disponíveis no sistema.</p>
+                </a>
+
+                <a href="{% url 'lista_pacientes' %}" class="card">
+                    <div class="icone">P</div>
+                    <h2>Pacientes</h2>
+                    <p>Consulte e atualize os dados dos pacientes cadastrados.</p>
+                </a>
+
+                <a href="{% url 'lista_especialidades' %}" class="card">
+                    <div class="icone">E</div>
+                    <h2>Especialidades</h2>
+                    <p>Organize as especialidades médicas atendidas pela clínica.</p>
+                </a>
+
+                <a href="{% url 'lista_convenios' %}" class="card">
+                    <div class="icone">C</div>
+                    <h2>Convênios</h2>
+                    <p>Gerencie os convênios aceitos pela clínica e pelos médicos.</p>
+                </a>
+                <a href="{% url 'lista_agendas_medicas' %}" class="card">
+                    <div class="icone">H</div>
+                    <h2>Agendas Médicas</h2>
+                    <p>Cadastre os dias, horários e vagas de atendimento dos médicos.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

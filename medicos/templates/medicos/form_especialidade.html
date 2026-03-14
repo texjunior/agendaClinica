@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo_pagina }}</title>
+    <style>
+        body { margin:0; font-family:Arial,sans-serif; background:#f4f6f9; color:#1f2937; }
+        .container { max-width:700px; margin:30px auto; padding:0 16px; }
+        .card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 8px 24px rgba(0,0,0,.06); }
+        .campo label { display:block; font-weight:bold; margin-bottom:6px; }
+        .campo input { width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:10px; }
+        .btn { display:inline-block; text-decoration:none; border:none; border-radius:10px; padding:12px 18px; font-weight:bold; cursor:pointer; }
+        .btn-primario { background:#2563eb; color:#fff; }
+        .btn-secundario { background:#e5e7eb; color:#111827; }
+        .linha-botoes { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
+        .errorlist { color:#b91c1c; margin:6px 0 0; padding-left:18px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div style="margin-bottom:20px;">
+        <h1>{{ titulo_pagina }}</h1>
+        <p style="color:#6b7280;">{{ subtitulo_pagina }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="card">
+            <div class="campo">
+                <label for="{{ form.nome.id_for_label }}">Nome</label>
+                {{ form.nome }}
+                {{ form.nome.errors }}
+            </div>
+
+            <div class="linha-botoes">
+                <button type="submit" class="btn btn-primario">
+                    {% if modo_edicao %}Atualizar especialidade{% else %}Salvar especialidade{% endif %}
+                </button>
+                <a href="{% url 'lista_especialidades' %}" class="btn btn-secundario">Voltar</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

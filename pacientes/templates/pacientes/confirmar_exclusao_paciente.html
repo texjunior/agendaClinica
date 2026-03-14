@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Paciente</title>
+    <style>
+        body { margin:0; font-family:Arial,sans-serif; background:#f4f6f9; color:#1f2937; }
+        .container { max-width:700px; margin:40px auto; padding:0 16px; }
+        .card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 8px 24px rgba(0,0,0,.06); }
+        .btn { display:inline-block; text-decoration:none; border:none; border-radius:10px; padding:12px 18px; font-weight:bold; cursor:pointer; }
+        .btn-perigo { background:#dc2626; color:#fff; }
+        .btn-secundario { background:#e5e7eb; color:#111827; }
+        .linha-botoes { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Excluir Paciente</h1>
+        <p>Confirme se deseja excluir o paciente <strong>{{ paciente.nome }}</strong>.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="linha-botoes">
+                <button type="submit" class="btn btn-perigo">Confirmar exclusão</button>
+                <a href="{% url 'lista_pacientes' %}" class="btn btn-secundario">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
