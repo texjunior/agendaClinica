@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Senha Emitida</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.06);
+            text-align: center;
+        }
+
+        .senha {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #111827;
+        }
+
+        .info {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .linha-botoes {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-primario {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-secundario {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        @media print {
+            .linha-botoes {
+                display: none;
+            }
+
+            body {
+                background: #fff;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Senha Emitida</h1>
+        <p class="info">Apresente esta senha para atendimento na recepção.</p>
+
+        <div class="senha">{{ senha.codigo }}</div>
+
+        <p><strong>Tipo:</strong> {{ senha.get_tipo_prioridade_display }} / {{ senha.get_tipo_atendimento_display }}</p>
+        <p><strong>Emitida em:</strong> {{ senha.data_emissao|date:"d/m/Y" }} às {{ senha.hora_emissao|time:"H:i" }}</p>
+
+        <div class="linha-botoes">
+            <button onclick="window.print()" class="btn btn-primario">Imprimir</button>
+            <a href="{% url 'emitir_senha' %}" class="btn btn-secundario">Nova senha</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-secundario">Início</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

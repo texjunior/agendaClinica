@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel de Senhas</title>
+    <meta http-equiv="refresh" content="10">
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .topo h1 {
+            margin: 0;
+            font-size: 34px;
+        }
+
+        .topo p {
+            margin: 6px 0 0;
+            color: #cbd5e1;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 12px 28px rgba(0,0,0,.25);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 22px;
+            color: #cbd5e1;
+        }
+
+        .senha-atual {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .rotulo {
+            font-size: 20px;
+            color: #93c5fd;
+            margin-bottom: 12px;
+        }
+
+        .codigo {
+            font-size: 110px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 18px;
+        }
+
+        .guiche {
+            font-size: 34px;
+            font-weight: bold;
+            color: #fde68a;
+        }
+
+        .horario {
+            margin-top: 14px;
+            font-size: 18px;
+            color: #cbd5e1;
+        }
+
+        .vazio {
+            text-align: center;
+            font-size: 26px;
+            color: #cbd5e1;
+            padding: 40px 10px;
+        }
+
+        .lista {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .item {
+            background: #334155;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-codigo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .item-guiche {
+            font-size: 20px;
+            color: #fde68a;
+        }
+
+        .item-hora {
+            font-size: 16px;
+            color: #cbd5e1;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .codigo {
+                font-size: 72px;
+            }
+
+            .guiche {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="topo">
+        <div>
+            <h1>Painel de Chamadas</h1>
+            <p>Acompanhe a senha atual e as últimas senhas chamadas.</p>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="card">
+            <h2>Senha Atual</h2>
+
+            {% if ultima_chamada %}
+                <div class="senha-atual">
+                    <div class="rotulo">Dirija-se ao</div>
+                    <div class="codigo">{{ ultima_chamada.senha.codigo }}</div>
+                    <div class="guiche">{{ ultima_chamada.guiche.nome }}</div>
+                    <div class="horario">
+                        Chamada às {{ ultima_chamada.hora_chamada|date:"H:i:s" }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="vazio">
+                    Nenhuma senha foi chamada ainda.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Últimas Chamadas</h2>
+
+            <div class="lista">
+                {% for chamada in ultimas_chamadas %}
+                    <div class="item">
+                        <div>
+                            <div class="item-codigo">{{ chamada.senha.codigo }}</div>
+                            <div class="item-hora">{{ chamada.hora_chamada|date:"H:i:s" }}</div>
+                        </div>
+                        <div class="item-guiche">{{ chamada.guiche.nome }}</div>
+                    </div>
+                {% empty %}
+                    <div class="vazio" style="font-size:20px; padding:20px 10px;">
+                        Sem chamadas registradas.
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

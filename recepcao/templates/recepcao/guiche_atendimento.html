@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Guichê de Atendimento</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.06);
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .campo input,
+        .campo select,
+        .campo textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-primario {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-secundario {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .senha-atual {
+            text-align: center;
+            padding: 16px;
+            border-radius: 12px;
+            background: #eff6ff;
+        }
+
+        .senha-atual .codigo {
+            font-size: 64px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .mensagem {
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .alerta {
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .linha-botoes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .errorlist {
+            color: #b91c1c;
+            margin: 6px 0 0;
+            padding-left: 18px;
+        }
+
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .senha-atual .codigo {
+                font-size: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mensagem {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if alerta_agendamento %}
+        <div class="alerta">{{ alerta_agendamento }}</div>
+    {% endif %}
+
+    <div class="topo">
+        <div>
+            <h1>Guichê de Atendimento</h1>
+            <p>Chame a próxima senha e registre os dados do paciente.</p>
+        </div>
+
+        <a href="{% url 'dashboard' %}" class="btn btn-secundario">Início</a>
+    </div>
+
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="chamar">
+
+            <div class="grid">
+                <div class="campo">
+                    <label for="{{ chamar_form.guiche.id_for_label }}">Guichê</label>
+                    {{ chamar_form.guiche }}
+                    {{ chamar_form.guiche.errors }}
+                </div>
+            </div>
+
+            <div class="linha-botoes">
+                <button type="submit" class="btn btn-primario">Chamar próxima senha</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Senha Atual</h2>
+
+        {% if chamada_atual %}
+            <div class="senha-atual">
+                <div>Em atendimento</div>
+                <div class="codigo">{{ chamada_atual.codigo }}</div>
+                <div>{{ chamada_atual.get_tipo_prioridade_display }} / {{ chamada_atual.get_tipo_atendimento_display }}</div>
+            </div>
+        {% else %}
+            <p>Nenhuma senha em atendimento no momento.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Dados do Paciente</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="salvar_atendimento">
+
+            <div class="grid">
+                <div class="campo">
+                    <label for="{{ atendimento_form.nome_paciente.id_for_label }}">Nome do paciente</label>
+                    {{ atendimento_form.nome_paciente }}
+                    {{ atendimento_form.nome_paciente.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ atendimento_form.cpf_paciente.id_for_label }}">CPF</label>
+                    {{ atendimento_form.cpf_paciente }}
+                    {{ atendimento_form.cpf_paciente.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ atendimento_form.convenio.id_for_label }}">Convênio</label>
+                    {{ atendimento_form.convenio }}
+                    {{ atendimento_form.convenio.errors }}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ atendimento_form.observacao.id_for_label }}">Observação</label>
+                    {{ atendimento_form.observacao }}
+                    {{ atendimento_form.observacao.errors }}
+                </div>
+            </div>
+
+            <div class="linha-botoes">
+                <button type="submit" class="btn btn-primario">Salvar atendimento</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

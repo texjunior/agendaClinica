@@ -119,6 +119,25 @@
         <div class="secao">
             <h3>Atendimento</h3>
             <div class="grid">
+
+                <a href="{% url 'painel_senhas' %}" class="card">
+                    <div class="icone">P</div>
+                    <h2>Painel de Senhas</h2>
+                    <p>Mostra a senha atual chamada e o histórico recente dos guichês.</p>
+                </a>
+
+                <a href="{% url 'emitir_senha' %}" class="card">
+                    <div class="icone">S</div>
+                    <h2>Emitir Senha</h2>
+                    <p>Gere senhas preferenciais e normais para particular ou convênio.</p>
+                </a>
+
+                <a href="{% url 'guiche_atendimento' %}" class="card">
+                    <div class="icone">G</div>
+                    <h2>Guichê</h2>
+                    <p>Chame a próxima senha e registre os dados iniciais do paciente na recepção.</p>
+                </a>
+
                 <a href="{% url 'lista_agendamentos' %}" class="card">
                     <div class="icone">A</div>
                     <h2>Agendamentos</h2>
